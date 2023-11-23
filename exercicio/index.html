@@ -4,52 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
 </head>
 <body>
-    <style>
-        #wazeMap {
-            width: 1000px;
-            height: 400px;
-        }
-    </style>
-    
-    <body>
-        <iframe id="wazeMap" src="" ></iframe>
-        <a id="wazeRota" href="">link rota</a>
-    
-      
-    
-        <script>
-            navigator.geolocation.getCurrentPosition(funciona, erro);
-    
-            function funciona(pos) {
-                var la = pos.coords.latitude;
-                var lo = pos.coords.longitude;
-                var laR = -23.53603641729558;
-                var loR = -46.39795470186211;
-                urLink = `https://embed.waze.com/iframe?zoom=12&lat=${la}&lon={lo}`;
-                urlRota = `https://www.waze.com/pt-PT/live-map/directions?to=${la}$2C${lo}$from=&${laR}%2C${loR}`
-                document.getElementById('wazeMap').src = urLink;
-                document.getElementById('wazeRota').href = urlRota;
-            }
+
+    <div id="map" style="height: 800px;"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var marker = L.marker([0, 0]).addTo(map);
+
+        navigator.geolocation.getCurrentPosition(funciona, erro);
+        function funciona(pos) {
+            var la = pos.coords.latitude;
+            var lo = pos.coords.longitude;
+
+            marker.setLatLng([la, lo]); //COLOCA O MARCADOR NA LOCALIZAÇÃO DO NAVEGADOR
+
             L.Routing.control({
                 waypoints: [
-                    L.latLng(-23.54294980082743, -46.35767551357751),
-                    L.latLng(-23.55682860422309, -46.313548031359694) //LATITUDE E LONGITUDE DE DESTINO. (utilize o Senai Suzano como exemplo)
+                    L.latLng(la, lo),  // Latitude e longitude capturada no navegador do usuário
+                    L.latLng(-23.5566516, -46.3136124) // Latitude e longitude de destino (por exemplo, Senai Suzano)
                 ]
             }).addTo(map);
+        }
 
-            function erro(){
-                console.log('não foi possível localizar');
-            }
-        </script>
+        function erro() {
+            console.log('Não foi possível localizar');
+        }
+        
+
+    </script>
 </body>
 </html>
-
-
-
-
